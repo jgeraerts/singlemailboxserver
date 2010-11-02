@@ -2,8 +2,10 @@ from zope.interface import implements
 from twisted.application import service
 from twisted.cred import portal,checkers
 from twisted.mail import maildir,pop3
+from hashlib import md5
 import os
 import protocols
+
 
 class EmailService(service.MultiService):
     implements(portal.IRealm)
@@ -11,8 +13,7 @@ class EmailService(service.MultiService):
     def __init__(self):
         service.MultiService.__init__(self)
         self.portal = portal.Portal(self)
-        checker = checkers.InMemoryUsernamePasswordDatabaseDontUse()
-        checker.addUser("guest","password")
+        checker = checkers.FilePasswordDB(self.passwordFile(),hash=self.checkmd5)
         self.portal.registerChecker(checker)
 
     def requestAvatar(self,avatarId, mind, *interfaces):
@@ -27,11 +28,31 @@ class EmailService(service.MultiService):
         except ImportError:
             return os.path.expanduser("~")
 
+    def configDir(self):
+        config = os.path.join(self.userDir(),'.singlemailboxserver')
+        if not os.path.exists(config):
+            os.mkdir(config)
+        return config
+
+    def passwordFile(self):
+        return os.path.join(self.configDir(),'passwd')
+
+    def hasPassword(self):
+        return os.path.exists(self.passwordFile())
+
+    def updateCredentials(self,username,password):
+        with open(self.passwordFile(),'w') as f:
+            f.write('{0}:{1}'.format(username,md5(password).hexdigest()))
+
     def maildirDirectory(self):
-        return os.path.join(self.userDir(),'Maildir')
+        return os.path.join(self.configDir(),'Maildir')
+
+    def checkmd5(self,username,password,storedpassword):
+        return md5(password).hexdigest() 
+        
 
     def getPOP3Factory(self):
-        return protocols.POP3Factory(self.portal);
+        return protocols.POP3Factory(self.portal)
 
     def getSMTPFactory(self):
         return protocols.SMTPFactory(self)
