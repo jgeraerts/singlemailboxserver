@@ -7,9 +7,15 @@ in a single mailbox. I use this server for testing webapplications that send out
 Dependencies
 ------------
 
-* Python (2.6 and 2.7, 3.1 failed the 5 minute test), assuming python.exe is in your PATH variable
+* Python (2.6 and 2.7), assuming python.exe is in your PATH variable
 * setuptools (0.6c11)
 * Twisted Framework (10.1.0) 
+
+Python version 3.1 failed my 5 minute test (setuptools would not install). Older versions of twisted might also
+work but i developed this against 10.1.0.
+
+If you are running the 64bit version you are going to need visual studio to install twisted since there are no binary
+packages available.
 
 Installation
 ------------
