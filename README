@@ -1,0 +1,50 @@
+Single Mailbox Server
+=====================
+
+This is a very simple email server(SMTP/POP3) that accepts all incoming mails and drops them 
+in a single mailbox. I use this server for testing webapplications that send out mails. 
+
+Dependencies
+------------
+
+* Python (2.6 and 2.7, 3.1 failed the 5 minute test), assuming python.exe is in your PATH variable
+* setuptools (0.6c11)
+* Twisted Framework (10.1.0) 
+
+Installation
+------------
+
+Make sure you have the dependencies above installed. Then simply run:
+
+python setup.py install
+
+Running The Server
+------------------ 
+
+Windows
+-------
+On windows I noticed you need to run twistd.py with the python command in front of it. Making use of file associations
+does not seem to work. 
+
+%PYTHONHOME% is the path you have installed python
+
+python %PYTHONHOME%\Scripts\Twistd.py singlemailboxserver
+
+Linux
+-----
+
+Not tested yet, but i guess you can simply run
+
+\path\to\twistd.py singlemailboxserver
+
+On first startup and no options specified it will as for a password that will be used for authenticating when using
+POP3. The username is your sytem loginname. You can override this with --pop3username and --pop3password. 
+
+By default the server listens on port 2500 for smtp and 1100 for POP3. You can also override these with command line options. 
+To get a overview of all the options append --help to the commands above.
+
+
+
+
+
+
