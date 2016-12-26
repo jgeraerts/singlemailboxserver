@@ -33,6 +33,6 @@ class Options(usage.Options):
         self.service = service.EmailService()
 
 def makeService(config):
-    internet.TCPServer(config['smtpport'],config.service.getSMTPFactory(),10,config['pop3listen']).setServiceParent(config.service)
-    internet.TCPServer(config['pop3port'],config.service.getPOP3Factory(),10,config['smtplisten']).setServiceParent(config.service)
+    internet.TCPServer(config['smtpport'],config.service.getSMTPFactory(),10,config['smtplisten']).setServiceParent(config.service)
+    internet.TCPServer(config['pop3port'],config.service.getPOP3Factory(),10,config['pop3listen']).setServiceParent(config.service)
     return config.service
